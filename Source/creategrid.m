@@ -1,4 +1,4 @@
-function puschgrid = creategrid(para,xprecoding,puschgrid,slotIdx)
+function puschgrid = creategrid(para,xprecoding,puschgrid,slotIdx,w)
     parameter;
     gridIdx.dmrs =  zeros(12*ue.NPrb,2);
     for i = 1:12*ue.NPrb/2
@@ -18,7 +18,7 @@ function puschgrid = creategrid(para,xprecoding,puschgrid,slotIdx)
         end 
     end
     gridinslot = zeros(12*ue.NPrb,ue.NPuschSymbAll,sys.NTxAnt);
-    gridinslot = dmrsmapping(gridinslot,gridIdx.dmrs,para.NDmrsperPrb,ue.NPrb,sys.Numerology,sys.CpType,ue.NnScIdId,ue.nScId,ue.NumDmnrCdmGroupWithoutdata,slotIdx);
+    gridinslot = dmrsmapping(gridinslot,gridIdx.dmrs,para.NDmrsperPrb,ue.NPrb,sys.Numerology,sys.CpType,ue.NnScIdId,ue.nScId,ue.NumDmnrCdmGroupWithoutdata,slotIdx,sys.NTxAnt,w);
     gridinslot = puschmapping(gridinslot,gridIdx.pusch,xprecoding);
     puschgrid = [puschgrid gridinslot]; 
 end

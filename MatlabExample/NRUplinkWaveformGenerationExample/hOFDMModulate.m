@@ -116,10 +116,9 @@ function [waveform,info] = hOFDMModulate(gnb,grid,varargin)
     if (mod(N,2)~=0)
         error('For the Windowing parameter the value (%d) must be even.',N);
     end
-    %info.Windowing = N ;
-    %Cho này chỉnh fOFDM
-    N = 0;
-    info.Windowing = 0;
+    info.Windowing = N ;
+    %N = 0;
+    %info.Windowing = 0;
     
     % Index of first subcarrier in IFFT input
     firstSC = (nFFT/2) - (gnb.NRB*6) + 1;
@@ -207,10 +206,10 @@ function [waveform,info] = hOFDMModulate(gnb,grid,varargin)
         % cyclic prefix length.    
 
         % Window size will be nFFT + N + CP length
-        %window0 = raised_cosine_window(nFFT+cpLengths(1),N);
-        %window1 = raised_cosine_window(nFFT+cpLengths(2),N);
-        window0 = ones(nFFT + N + cpLengths(1),1);
-        window1 = ones(nFFT + N + cpLengths(2),1);
+        window0 = raised_cosine_window(nFFT+cpLengths(1),N);
+        window1 = raised_cosine_window(nFFT+cpLengths(2),N);
+        %window0 = ones(nFFT + N + cpLengths(1),1);
+        %window1 = ones(nFFT + N + cpLengths(2),1);
         
         % Extension periods (prefix, zero suffix) for symbols, accounting 
         % for any required for the windowing

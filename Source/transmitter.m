@@ -14,7 +14,7 @@ parameter;
  para.LDPCgraph = ldpcbasegraph(para.TBSsize,para.R);
 
 %% PUSCH processing
-para.nslots = 2;
+para.nslots = 20;
 puschgrid = [];
 for k = 1:para.nslots
     if (mod(k-1,length(sys.rvSeq))+1 == 1)
@@ -53,15 +53,15 @@ for k = 1:para.nslots
     x.layermapping = layer_mapping(x.modul,ue.nCw,ue.Nlayers);
 
     %% Precoding
-    x.precoding = precoding(x.layermapping,ue.CodeBookBased,ue.Nlayers,sys.NTxAnt,ue.Tpmi,ue.TransformPrecoding);
+    [x.precoding,para.w] = precoding(x.layermapping,ue.CodeBookBased,ue.Nlayers,sys.NTxAnt,ue.Tpmi,ue.TransformPrecoding);
 
     %% Create resource grid and symbol mapping
-    puschgrid = creategrid(para,x.precoding,puschgrid,k);
+    puschgrid = creategrid(para,x.precoding,puschgrid,k,para.w);
 end
-bwpgrid = zeros(12*sys.BwpNRb,14*para.nslots);
-bwpgrid(1:12*ue.NPrb,1:14*para.nslots) = puschgrid;  
+bwpgrid = zeros(12*sys.BwpNRb,14*para.nslots,sys.NTxAnt);
+bwpgrid(1:12*ue.NPrb,1:14*para.nslots,1:sys.NTxAnt) = puschgrid;  
 %% OFDM modulation
-[waveform bwp]=  ofdm_modulate(bwpgrid,sys.Numerology,sys.BwpNRb,sys.CpType);  
+[waveform bwpset]=  ofdm_modulate(bwpgrid,sys.Numerology,sys.BwpNRb,sys.CpType,sys.NTxAnt);  
 
 %% Plot the magnitude of the baseband waveform for the set of antenna ports defined
 figure;

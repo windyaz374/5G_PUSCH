@@ -1,6 +1,7 @@
-function [waveform info] = ofdm_modulate(grid,mu,NbwpPrb,cptype)
+function [waveform info] = ofdm_modulate(grid,mu,NbwpPrb,cptype,NTxant)
 %define parameters
 info = ofdminfo(NbwpPrb,mu,cptype);
+info.NTxant = NTxant;
 nSC = info.NSubcarriers;
 nFFT = info.Nfft;
 cpLengths = info.CyclicPrefixLengths;

@@ -844,8 +844,8 @@ function [waveform,gridset] = hNRUplinkWaveformGenerator(waveconfig)
                 % the data source and pass it to the UL-SCH processing
                 if rvidx == 1
                    trblksize = hPUSCHTBS(ch,modinfo.NREPerPRB-ch.Xoh_PUSCH);
-                   trblk = datasource.getPacket(trblksize);
-                   %trblk = ones(trblksize,1);
+                   %trblk = datasource.getPacket(trblksize);
+                   trblk = ones(trblksize,1);
                    setTransportBlock(ulsch,trblk);
                 end
 

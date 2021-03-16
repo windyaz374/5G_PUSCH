@@ -1,5 +1,5 @@
-function [gridinslot,dmrsseq]= dmrsmapping(gridinslot,dmrsIdx,NDmrsperPrb,NPrb,u,cptype,NnScIdId,nScId,nCDM,slotIdx)
-slotIdx = mod(slotIdx,2^u*10) - 1;
+function [gridinslot,dmrsseq]= dmrsmapping(gridinslot,dmrsIdx,NDmrsperPrb,NPrb,u,cptype,NnScIdId,nScId,nCDM,slotIdx,NTxAnt,w)
+slotIdx = mod(slotIdx-1,2^u*10);
 uniq = unique(dmrsIdx(:,1))-1;
 if (cptype==0)
     nsym = 14;
@@ -14,14 +14,16 @@ for i=1:length(uniq)
     cn{i} = sequence_gen(cinit(i),2*NDmrsperPrb*NPrb/(length(uniq)*nCDM));
     for k = 1:(length(cn{i})/2)
         dmrsseq{i} = [dmrsseq{i};1/sqrt(2)*(1-2*cn{i}(2*k-1))+j*1/sqrt(2)*(1-2*cn{i}(2*k))];
-    end
-    %dmrseq{i} = dmrsseq{i}';
+    end  
 end
 seqcom = [];
 for i=1:length(uniq)
     seqcom = [seqcom;dmrsseq{i}];
 end
-for i=1:length(seqcom)
-    gridinslot(dmrsIdx(i,2),dmrsIdx(i,1)) = seqcom(i);
+seqcom = w.*seqcom;
+for p = 1:NTxAnt
+    for i=1:length(seqcom)
+        gridinslot(dmrsIdx(i,2),dmrsIdx(i,1),p) = seqcom(i,p);
+    end
 end
 end

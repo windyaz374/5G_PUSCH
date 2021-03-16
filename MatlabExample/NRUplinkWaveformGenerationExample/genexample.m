@@ -29,10 +29,10 @@
 % output plots of the example.
 
 waveconfig = [];
-waveconfig.NCellID = 0;            % Cell identity
-waveconfig.ChannelBandwidth = 100;  % Channel bandwidth (MHz)
+waveconfig.NCellID = 500;          % Cell identity
+waveconfig.ChannelBandwidth = 100; % Channel bandwidth (MHz)
 waveconfig.FrequencyRange = 'FR1'; % 'FR1' or 'FR2'
-waveconfig.NumSubframes = 30;      % Number of 1ms subframes in generated waveform
+waveconfig.NumSubframes = 10;      % Number of 1ms subframes in generated waveform
                                    % (1,2,4,8 slots per 1ms subframe, depending on SCS)
 waveconfig.DisplayGrids = 1;       % Display the resource grids after signal generation
 
@@ -66,7 +66,7 @@ bwp = [];
 
 bwp(1).SubcarrierSpacing = 30;              % BWP1 Subcarrier Spacing
 bwp(1).CyclicPrefix = 'Normal';             % BWP1 cyclic prefix
-bwp(1).NRB = 273;                            % Size of BWP1
+bwp(1).NRB = 1;                            % Size of BWP1
 bwp(1).RBOffset = 0;                       % Position of BWP1 in carrier
 
 %bwp(2).SubcarrierSpacing = 30;              % BWP2 Subcarrier Spacing
@@ -317,18 +317,18 @@ pusch(1).Enable = 1;                        % Enable PUSCH config
 pusch(1).BWP = 1;                           % Bandwidth part
 pusch(1).Power = 0;                         % Power scaling in dB
 pusch(1).EnableCoding = 1;                  % Enable the UL-SCH transport coding
-pusch(1).NID = 0;                           % Scrambling for data part (0...1023)
+pusch(1).NID = 20;                           % Scrambling for data part (0...1023)
 pusch(1).RNTI = 2001;                          % RNTI
 pusch(1).TransformPrecoding = 0;            % Transform precoding flag (0 or 1)
-pusch(1).TargetCodeRate = 193/1024;             % Code rate used to calculate transport block sizes
+pusch(1).TargetCodeRate = 438/1024;             % Code rate used to calculate transport block sizes
 pusch(1).Xoh_PUSCH = 0;                     % Overhead. It is one of the set {0,6,12,18}
 
 % Transmission settings
-pusch(1).TxScheme = 'noncodebook';             % Transmission scheme ('codebook','nonCodebook')
-pusch(1).Modulation = 'QPSK';               % 'pi/2-BPSK','QPSK','16QAM','64QAM','256QAM'
+pusch(1).TxScheme = 'codebook';             % Transmission scheme ('codebook','nonCodebook')
+pusch(1).Modulation = '64QAM';               % 'pi/2-BPSK','QPSK','16QAM','64QAM','256QAM'
 pusch(1).NLayers = 1;                       % Number of PUSCH layers (1...4)
-pusch(1).NAntennaPorts = 1;                 % Number of antenna ports (1,2,4). It must not be less than number of layers
-pusch(1).TPMI = 0;                          % Transmitted precoding matrix indicator (0...27)
+pusch(1).NAntennaPorts = 4;                 % Number of antenna ports (1,2,4). It must not be less than number of layers
+pusch(1).TPMI = 5;                          % Transmitted precoding matrix indicator (0...27)
 pusch(1).RVSequence = [0 0 0 0];            % RV sequence to be applied cyclically across the PUSCH allocation sequence
 pusch(1).IntraSlotFreqHopping = 'disabled'; % Intra-slot frequency hopping ('enabled','disabled')
 pusch(1).RBOffset = 0;                     % Resource block offset for second hop
@@ -357,9 +357,9 @@ pusch(1).DataSource = 'PN9';                % Transport block data source
 
 pusch(1).PUSCHMappingType = 'A';        % PUSCH mapping type ('A'(slot-wise),'B'(non slot-wise))
 pusch(1).AllocatedSymbols = 0:13;       % Range of symbols in a slot
-pusch(1).AllocatedSlots = [0:1:79];        % Allocated slots indices
+pusch(1).AllocatedSlots = [0:1:19];        % Allocated slots indices
 pusch(1).AllocatedPeriod = [];           % Allocation period in slots (empty implies no repetition)
-pusch(1).AllocatedPRB = 0:272;          % PRB allocation
+pusch(1).AllocatedPRB = 0;          % PRB allocation
 
 %%
 % *DM-RS Configuration*
@@ -540,7 +540,7 @@ waveconfig.PUSCH = pusch;
 waveconfig.SRS = srs;
 
 % Generate complex baseband waveform
-[waveform,bwpset] = hNRUplinkWaveformGenerator(waveconfig);
+[waveform1,bwpset] = hNRUplinkWaveformGenerator(waveconfig);
 
 %%
 % The waveform generator also plots the SCS carrier alignment and the
@@ -569,7 +569,7 @@ disp('Information associated to BWP 1:')
 disp(bwpset(1).Info)
 %% Plot the magnitude of the baseband waveform for the set of antenna ports defined
 figure;
-plot(abs(waveform));
+plot(abs(waveform1));
 title('Magnitude of 5G Uplink Baseband Waveform');
 xlabel('Sample Index');
 ylabel('Magnitude');

@@ -1,27 +1,28 @@
-function z = precoding(in,codebook,nlayer,nant,tpmi,tp)
-in = in';
-if codebook == 0                %codebookbased transmission
+function [z,w] = precoding(in,codebook,nlayer,nant,tpmi,tp)
+if codebook == 0                %non-codebookbased transmission
     z = in;
-else                            %non-codebookbased transmission
+    w = 1;
+else                            %codebookbased transmission
     if nlayer == 1
         if nant == 1            %1layer-1antenna
             z = in;
+            w = 1;
         elseif nant == 2        %1layer-2antenna
             w = w12();
             w = w(tpmi*nlayer + (1:nlayer),:);
-            in = in';
-            z = in*w;
+            %in = in';
+            z = w.*in;
         elseif nant == 4        
             if tp == 1
                 w = w14_tp;     %1layer-4antenna-transformprecoding
                 w = w(tpmi*nlayer + (1:nlayer),:);
-                in = in';
-                z = in*w;
+                %in = in';
+                z = w.*in;
             else
                 w = w14_notp;  %1layer-4antenna-notransformprecoding
                 w = w(tpmi*nlayer + (1:nlayer),:);
-                in = in';
-                z = in*w;
+                %in = in';
+                z = w.*in;
             end
         end
     elseif nlayer == 2          
@@ -48,8 +49,6 @@ else                            %non-codebookbased transmission
         z = in_conc*w;
     end
 end
-
-z = z';
 end
 function W12 = w12()
 
